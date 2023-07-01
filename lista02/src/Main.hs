@@ -1,6 +1,6 @@
 module Main (main) where
 
-import Data.Char (isAlphaNum)
+import Data.Char (isAlphaNum, digitToInt)
 
 -- Função multiplicar, que recebe dois valores inteiros e retorna o produto do primeiro pelo segundo
 multiplicar :: Int -> Int -> Int
@@ -12,7 +12,7 @@ cumprimentar nome = "A linguagem preferida de " ++ nome ++  " é Haskell"
 
 -- Função velocidade, que recebe uma distância em km e a quantidade de horas que ela levou para ser percorrida, ambos do tipo Float, e retorna a string "Isso equivale a {x} km por hora!"
 velocidade :: Float -> Float -> String
-velocidade distancia tempo = "Isso equivale a "++ show(distancia/tempo) ++" km por hora!"
+velocidade distancia tempo = "Isso equivale a "++ show(distancia/tempo) ++" kilômetros por hora!"
 
 -- Função mult7 n que retorne True caso a entrada seja múltiplo de 7 e False caso contrário.
 mult7 :: Int -> Bool
@@ -42,15 +42,40 @@ algumNoIntervalo as b c =
     else algumNoIntervalo (tail as) b c
 
 -- Faça uma função ehPerfeito n que determine se um número é perfeito.
--- ehPerfeito :: ???
-ehPerfeito n = undefined
+ehPerfeito :: Int -> Bool
+ehPerfeito n = sum (todosDivisores n (n-1) []) == n 
+
+todosDivisores :: Int -> Int -> [Int] -> [Int]
+todosDivisores n c listaAtual = 
+  if c > 0
+    then
+      if n `mod` c == 0 
+        then todosDivisores n (c-1) (listaAtual ++ [c]) 
+        else todosDivisores n (c-1) listaAtual
+    else listaAtual
+
 
 -- Faça uma função procuraSeis que retorne todos os os números entre 0 e 999 cuja soma dos dígitos é 6.
 -- somaDigitosSeis :: ???
 somaDigitosSeis x = undefined
 
--- procuraSeis :: ???
-procuraSeis = undefined
+lista = [0..999]
+procuraSeis :: [Int]
+procuraSeis = concat (map res6 lista) 
+
+intParaString :: Int -> String
+intParaString x = show x
+
+divideDigitos :: String -> [Int]
+divideDigitos str = map digitToInt str
+
+res6 :: Int -> [Int]
+res6 x = 
+  if 
+    sum (divideDigitos (intParaString x)) == 6
+    then [x]
+    else [] 
+
 
 comprimentoAoQuadrado :: [String] -> [Int]
 comprimentoAoQuadrado xs = map square (map length xs)  
@@ -79,8 +104,8 @@ geraAux n str listaAtual =
 descontoDaSorte :: [Int] -> [Int]
 descontoDaSorte xs = (concat(map ((verifica2 mult7)) xs))
 
-verifica2 ::  (a -> Bool) -> a -> [a]
-verifica2 f x = if (f x) then [] else [x]
+verifica2 ::  (Int -> Bool) -> Int -> [Int]
+verifica2 f x = if f (x-10) then [] else [x-10]
 --
 
 --limparUserNames
@@ -96,21 +121,56 @@ removeChar x = if isAlphaNum x then [x] else []
 
 --maisDaMetade
 maisDaMetade :: (a -> Bool) -> [a] -> Bool
-maisDaMetade f xs = (fromIntegral(length (concat (map (verifica f) xs))):: Float) >= (maioria xs)
+maisDaMetade f xs = (fromIntegral(length (concat (map (verifica f) xs))):: Float) > (metade xs)
 
-maioria :: [a] -> Float
-maioria xs = (fromIntegral(length xs) :: Float)/2
+metade :: [a] -> Float
+metade xs = (fromIntegral(length xs) :: Float)/2
 --
 
-
+--
 filterDesastrado :: (a -> Bool) -> [a] -> [a]
-filterDesastrado = undefined
+filterDesastrado f xs =  verificaF f [] xs
+
+verificaF ::  (a -> Bool) -> [a] -> [a] -> [a]
+verificaF f listaAtual [] = listaAtual
+verificaF f listaAtual xs =
+  if length xs > 0
+    then 
+      if f (xs !! 0)
+        then verificaF f (listaAtual ++ [xs !! 0]) (tail xs)
+        else 
+          if length listaAtual == 0
+            then
+              verificaF f [] (tail xs) 
+            else
+              verificaF f (init listaAtual) (tail xs) 
+    else
+      listaAtual
+-------
 
 palavraMaisLonga :: [String] -> String
-palavraMaisLonga = undefined
+palavraMaisLonga conjunto = comparaMaiorPalavra conjunto
+
+pegaMaiorTamanho :: [String] -> Int
+pegaMaiorTamanho conjunto = maximum (map length conjunto)
+
+comparaMaiorPalavra :: [String] -> String
+comparaMaiorPalavra conjunto = 
+  if length (conjunto!!0) == pegaMaiorTamanho conjunto
+    then conjunto!!0
+    else comparaMaiorPalavra (tail conjunto)
+
+--
 
 jogadorBlackJack :: [Int] -> Bool
-jogadorBlackJack = undefined
+jogadorBlackJack lista = somaBlackJack 0 lista
+
+somaBlackJack :: Int -> [Int] -> Bool
+somaBlackJack somaAtual [] = somaAtual <= 21
+somaBlackJack somaAtual lista = 
+   if somaAtual + head lista >= 18
+    then somaAtual + head lista <= 21
+    else somaBlackJack (somaAtual + head lista) (tail lista)
 
 
 main :: IO ()
