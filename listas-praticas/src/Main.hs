@@ -42,19 +42,42 @@ testeBissextos n =
       else False
 
 --3. Desenvolva uma função pop, que recebe uma lista e um Integer n. Ela retorna a lista sem o n-ésimo elemento (indexado em 0).
-pop :: Eq a => [a] -> Int -> [a]
+
+pop :: [a] -> Int -> [a]
 pop xs 0 = tail xs
-pop xs i = concat (map (ehPosicao a) xs)
-  where a = xs!!i
-
-ehPosicao :: Eq a => a -> a -> [a]
-ehPosicao y x = if x == y then [] else [x]
-
-
+pop xs i = take i xs ++ reverse(take parte2 (reverse xs))
+  where 
+    parte2 = (length xs - i-1)
 
 --4.Desenvolva uma função range, que recebe uma lista e dois Integers, i, j. Ela retorna a sublista com os elementos do índice i (inclusivo) a j (exclusivo), similar à função range da linguagem Python.
 
+range :: [Integer] -> Integer -> Integer -> [Integer]
+range xs i j = concat(map (retornaSe i j) xs)
+
+retornaSe:: Integer -> Integer -> Integer -> [Integer]
+retornaSe i j x= if (x >= i) && (x < j) then [x] else []
+
 --5. Desevolva uma função palindrome que recebe uma palavra (String) e retorne True caso ela seja palíndrome, ou False caso contrário. Não utilize a função reverse.
+-- palindrome:: String -> Bool
+-- palindrome _ = True
+-- palindrome str =  
+--   if 
+--     testaChar x y 
+--     then 
+--       if length palindrome > 2
+--         then 
+--           palindrome xs 
+--           else 
+--           head str == last str
+--       else 
+--         False
+--   where
+--     x = head str
+--     y = last str
+--     xs = tail (init str)
+
+-- testaChar :: Char -> Char -> Bool
+-- testaChar x y =   x == y
 
 main :: IO ()
 main = do
