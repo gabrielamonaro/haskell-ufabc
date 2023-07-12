@@ -1,7 +1,7 @@
 module Main (main) where
+import Data.List (sort)
 
-module Main (main) where
-
+----------------------LISTA01
 -- 1. Coloque parênteses nas seguintes expressões:
 -- 2^(3*4)
 -- 2*(3+4)*5
@@ -85,11 +85,9 @@ co :: (b -> c) -> (a -> b) -> a -> c
 co f g x = f g a
 
 
+
 ----------------------------LISTA 02
-
-import Data.List (sort)
-
-
+-- import Data.List (sort)
 -- 1. Defina uma função
 penultimo :: [a] -> a
 -- que devolve o penúltimo elemento de uma lista, apresentando uma mensagem de erro nos casos de lista vazia e lista com apenas um elemento.
@@ -197,12 +195,6 @@ coord xs ys = concat [[(x,y) | y <- ys] | x <- xs]
 -- True
 -- > luhn 4012888888881882
 -- False
-
-main :: IO ()
-main = do
-  putStrLn "hello world"
-
-
 
 
 
